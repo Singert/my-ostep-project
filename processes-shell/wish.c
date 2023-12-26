@@ -2,44 +2,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-void exec_batch(char * batchfile);
-
+void exec_command(char * batchfile);
 
 int count_tokens(char * tokens, int char_count);
 
 int read_line(char ** buffer, FILE * stream);
 
+char ** tokenize(FILE * stream, int input_type);
+
 
 int main(int argc, char * argv[]){
 
-    argc = 2;
-    argv[0] = "./wishhh";
-    argv[1] = "test.txt";
+    // argc = 2;
+    // argv[0] = "./wishhh";
+    // argv[1] = "test.txt";
 
     char * error_message = "An error has occurred\n";
 
-    if(argc > 2){
+    if(argc > 2){   
         fprintf(stderr, "%s", error_message);
         exit(1);
     }else if(argc == 2){
-        exec_batch(argv[1]);
+        exec_command(argv[1]);
         exit(0);
+    }else if(argc == 1){
+        printf("wish> ");
+        exec_command("stdin");
     }
-
-    while (1)
-    {
-        printf("whish> ");
-
-        char * buffer = NULL;
-        if(read_line(&buffer, stdin) != -1){
-            if(strcmp(buffer, "exit\n") == 0){
-                exit(0);
-            }
-        }
-        
-    }
-    
-
 
     return 0;
 }
@@ -69,35 +58,58 @@ int count_tokens(char * tokens, int char_count){
         return token_count;
 }
 
-void exec_batch(char * batchfile){
-    FILE * fp = fopen(batchfile, "r");
-
-    if(fp == NULL){
-        fprintf(stderr, "Could not open file %s\n", batchfile);
-        exit(1);
-    }
+char ** tokenize(FILE * stream, int input_type){
 
     char * cmd_tokens = NULL;
-
     int char_count = 0;
 
-    while((char_count = read_line(&cmd_tokens, fp)) != EOF){
+    if((char_count = read_line(&cmd_tokens, stream)) == EOF){
+        exit(0);
+    }
 
-        int token_count = count_tokens(cmd_tokens, char_count);
+    if(strcmp(cmd_tokens, "exit\n") == 0){
+        exit(0);
+    }
+
+    if(input_type){
+        printf("wish> ");
+    }
+
+    int token_count = count_tokens(cmd_tokens, char_count);
 
 
-        char ** arg_tokens = (char **) malloc(sizeof(char *) * token_count +1);
-        int i = 0;
+    char ** arg_tokens = (char **) malloc(sizeof(char *) * token_count +1);
+    int i = 0;
 
-        while((arg_tokens[i] = strsep(&cmd_tokens, " "))){
-            i++;
+    while((arg_tokens[i] = strsep(&cmd_tokens, " "))){
+        i++;
+    }   
 
+    return arg_tokens;
+}
+
+void exec_command(char * batchfile){
+
+    FILE * fp;
+    int w = 0;
+
+    if(strcmp(batchfile, "stdin") == 0){
+        fp = stdin;
+        w  = 1;
+    }else{
+        fp = fopen(batchfile, "r");
+        if(fp == NULL){
+            fprintf(stderr, "Could not open file %s\n", batchfile);
+            exit(1);
         }
+    }
 
+    
+    while(1){
+
+        char ** arg_tokens = tokenize(fp, w);
 
         
-        
-
     }
 
 }
