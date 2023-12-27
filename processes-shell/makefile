@@ -3,7 +3,7 @@ CFLAGS = -Wall -Werror
 
 all: wish
 
-wish: wish.o
+wish: wish.o parser.o
 	$(CC) $^ -o $@ $(CFLAGS)
 
 %.o:%.c
@@ -12,4 +12,4 @@ wish: wish.o
 .PHONY: clean
 
 clean:
-	rm -f wish.o wish
+	rm -f wish.o parser.o wish
