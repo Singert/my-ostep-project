@@ -17,12 +17,14 @@ int read_line(char ** buffer, FILE * stream);
 
 char ** tokenize(FILE * stream, int input_type);
 
-void token_extract(char * source, char ** destination);
+void token_extract(char * source, char ** destination, char * delim);
 
-void exec_cmd(char ** commands);
+void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count);
 
 void command_select(char ** commands, int token_count);
 
 char * is_file_exist(char * path);
 
 void path_init(char ** commands, int token_count);
+
+int tokenize_commands(char ** commands, int token_count, int * checkpoints);

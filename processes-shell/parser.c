@@ -38,9 +38,9 @@ char ** tokenize(FILE * stream, int input_type){
     char ** arg_tokens;
 
     if(token_count){
-        arg_tokens = (char **) malloc(sizeof(char *) * token_count +1);
+        arg_tokens = (char **) malloc(sizeof(char *) * (token_count +1));
 
-        token_extract(cmd_tokens, arg_tokens);
+        token_extract(cmd_tokens, arg_tokens, " \n");
 
         command_select(arg_tokens, token_count);
     }
@@ -69,8 +69,42 @@ void command_select(char ** commands, int token_count){
         path_init(commands, token_count);
 
     }else{
-        exec_cmd(commands);
+        int checkpoints[100] = {0};
+        int checkpoints_count = tokenize_commands(commands, token_count, checkpoints);
+        exec_cmd(commands, checkpoints, checkpoints_count);
     }
+}
+
+int tokenize_commands(char ** commands, int token_count, int * checkpoints){
+
+    int j = 0;
+    int f = 0;
+    for (size_t i = 0; i < token_count; i++)
+    {
+        if((strcmp(commands[i], "&") == 0 && i!= token_count -1 && strcmp(commands[i], commands[i+1]) == 0) || strcmp(commands[0], "&") == 0){
+            fprintf(stderr, "%s", error_message);
+            return -1;
+        }
+
+        if(strcmp(commands[i], "&") == 0){
+            checkpoints[j++] = i - 1;
+            f = 0;
+            continue;
+        }
+
+        if(f == 0){
+            checkpoints[j++] = i;
+            f = 1;
+        }
+        
+    }
+
+    if(strcmp(commands[token_count - 1], "&") != 0){
+        checkpoints[j++] = token_count - 1;
+    }
+    
+    return j;
+    
 }
 
 void path_init(char ** commands, int token_count){
@@ -90,35 +124,54 @@ void path_init(char ** commands, int token_count){
 }
 
 
-void exec_cmd(char ** commands){
+void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
 
-    if(commands == NULL){
+    if(commands == NULL || checkpoints_count == -1){
         return;
     }
 
-    char * path;
-    if((path = is_file_exist(commands[0])) == NULL){
-        fprintf(stderr, "%s", error_message);
-        return;
-    }
+    int j = 0;
+    size_t * pid = (size_t *) malloc(sizeof(size_t) * (checkpoints_count/2));
 
-    size_t pid = fork();
 
-    if(pid == -1){
-        exit(1);
-    }else if(pid == 0){
+    while(j < checkpoints_count){
 
-        execvp(path, commands);
-        fprintf(stderr, "%s", error_message);
-        exit(1);
-
-    }else{
-        size_t ws = wait(NULL);
-        if(ws == -1){
-            exit(1);
+        char * path;
+        if((path = is_file_exist(commands[checkpoints[j]])) == NULL){
+            fprintf(stderr, "%s", error_message);
+            return;
         }
+
+        int command_size = checkpoints[j+1] - checkpoints[j];
+        char ** single_command = (char **) malloc(sizeof(char *) * (command_size + 1));
+
+        for (size_t i = checkpoints[j]; i <= checkpoints[j+1]; i++)
+        {
+            single_command[i-checkpoints[j]] = commands[i];
+        }
+        
+
+        pid[j/2] = fork();
+
+        if(pid[j/2] == -1){
+            exit(1);
+        }else if(pid[j/2] == 0){
+
+            execvp(path, single_command);
+            fprintf(stderr, "%s", error_message);
+            exit(1);
+
+        }
+
+        j+=2;
     }
 
+    for (size_t i = 0; i < checkpoints_count/2; i++)
+    {
+        waitpid(pid[i], NULL, 0);
+    }
+    
+    
 }
 
 char * is_file_exist(char * filename){
@@ -165,10 +218,10 @@ int count_tokens(char * tokens, int char_count){
 }
 
 
-void token_extract(char * source, char ** destination){
+void token_extract(char * source, char ** destination, char * delim){
     int i = 0;
     char * temp;
-    while((temp = strsep(&source, " \n"))){
+    while((temp = strsep(&source, delim))){
         if(*temp){
             destination[i] = temp;
             i++;
