@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <fcntl.h>
 
 extern char * error_message;
 extern char * env[500];
@@ -28,3 +29,9 @@ char * is_file_exist(char * path);
 void path_init(char ** commands, int token_count);
 
 int tokenize_commands(char ** commands, int token_count, int * checkpoints);
+
+int redirect_start(char * filename);
+
+void redirect_end(int original_stdout, int original_stderr);
+
+char * token_trim(char * token, int start, int end);

@@ -61,7 +61,7 @@ void command_select(char ** commands, int token_count){
 
         if(token_count != 2 || chdir(commands[1]) == -1){
             fprintf(stderr, "%s", error_message);
-            exit(1);
+            exit(0);
         }
 
     }else if(strcmp(commands[0], "path") == 0){
@@ -75,14 +75,78 @@ void command_select(char ** commands, int token_count){
     }
 }
 
-int tokenize_commands(char ** commands, int token_count, int * checkpoints){
+int redirect_check(char ** single_command, int command_size){
 
+    int redirect_count = 0;
+
+    for (size_t i = 0; i <= command_size; i++)
+    {
+        if(strcmp(single_command[i], ">") == 0 && (i != command_size-1)){
+            fprintf(stderr, "%s", error_message);
+            return -1;
+        }
+
+        if(strcmp(single_command[i], ">") == 0){
+            redirect_count++;
+        }
+        
+    }
+
+    if(redirect_count > 1){
+        fprintf(stderr, "%s", error_message);
+        return -1;
+    }
+
+    return redirect_count;
+
+}
+
+int redirect_start(char * filename){
+
+    int fd = open(filename, O_WRONLY|O_TRUNC|O_CREAT, 0644);
+
+    if (fd < 0) {
+        fprintf(stderr, "%s", error_message);
+        return -1;
+    }
+
+    if (dup2(fd, 1) < 0){
+        fprintf(stderr, "%s", error_message);
+        return -1; 
+    }
+
+    if (dup2(fd, 2) < 0){
+        fprintf(stderr, "%s", error_message);
+        return -1; 
+    }
+
+    close(fd);
+    return 0;
+}
+
+void redirect_end(int original_stdout, int original_stderr){
+    
+    if(dup2(original_stdout, 1) < 0){
+        fprintf(stderr, "%s", error_message);
+        return; 
+    }
+
+    if(dup2(original_stderr, 2) < 0){
+        fprintf(stderr, "%s", error_message);
+        return; 
+    }
+
+    close(original_stdout);
+    close(original_stderr);
+}
+
+int tokenize_commands(char ** commands, int token_count, int * checkpoints){
     int j = 0;
     int f = 0;
     for (size_t i = 0; i < token_count; i++)
     {
         if((strcmp(commands[i], "&") == 0 && i!= token_count -1 && strcmp(commands[i], commands[i+1]) == 0) || strcmp(commands[0], "&") == 0){
-            fprintf(stderr, "%s", error_message);
+            // fprintf(stderr, "%s", error_message);
             return -1;
         }
 
@@ -133,6 +197,8 @@ void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
     int j = 0;
     size_t * pid = (size_t *) malloc(sizeof(size_t) * (checkpoints_count/2));
 
+    int original_stdout;
+    int original_stderr;
 
     while(j < checkpoints_count){
 
@@ -143,13 +209,32 @@ void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
         }
 
         int command_size = checkpoints[j+1] - checkpoints[j];
-        char ** single_command = (char **) malloc(sizeof(char *) * (command_size + 1));
+        char ** single_command = (char **) malloc(sizeof(char *) * (command_size + 2));
+
 
         for (size_t i = checkpoints[j]; i <= checkpoints[j+1]; i++)
         {
             single_command[i-checkpoints[j]] = commands[i];
         }
         
+        int redirect_count = 0;
+
+        if((redirect_count = redirect_check(single_command, command_size)) == -1){
+            return;
+
+        }else if(redirect_count == 1){
+
+            original_stdout = dup(1);
+            original_stderr = dup(2);
+
+            if(redirect_start(commands[checkpoints[j+1]]) == -1){
+                fprintf(stderr, "%s", error_message);
+                return;
+            }
+            single_command[command_size] = NULL;
+            single_command[command_size-1] = NULL;
+        }
+
 
         pid[j/2] = fork();
 
@@ -157,10 +242,14 @@ void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
             exit(1);
         }else if(pid[j/2] == 0){
 
-            execvp(path, single_command);
+            execv(path, single_command);
             fprintf(stderr, "%s", error_message);
             exit(1);
 
+        }
+
+        if(redirect_count == 1){
+            redirect_end(original_stdout, original_stderr);
         }
 
         j+=2;
@@ -210,6 +299,8 @@ int count_tokens(char * tokens, int char_count){
     {
         if((tokens[i] == ' ' && (last_char != 0 && last_char != ' ')) || (tokens[i] == '\n' && (last_char != 0 && last_char != ' '))){
             token_count++;
+        }else if(tokens[i] == '>' && i != 0 && i != char_count -1 && tokens[i-1] != ' ' && tokens[i+1] != ' '){
+            token_count+=2;
         }
         last_char = tokens[i];
     }
@@ -221,10 +312,48 @@ int count_tokens(char * tokens, int char_count){
 void token_extract(char * source, char ** destination, char * delim){
     int i = 0;
     char * temp;
+    char * trim_res;
+
     while((temp = strsep(&source, delim))){
         if(*temp){
-            destination[i] = temp;
-            i++;
+            int j;
+            int last = 0;
+            for (j = 0; temp[j] != '\0' ; j++){
+                if(temp[j] == '>'){
+                    
+                    if((trim_res = token_trim(temp, last, j-1)) != NULL){
+                        destination[i] = trim_res;
+                        i++;
+                    }
+
+                    destination[i] = ">";
+                    i++;
+
+                    last = j+1;
+
+                }
+            }
+            
+            if((trim_res = token_trim(temp, last, j-1)) != NULL){
+                destination[i] = trim_res;
+                i++;
+            }
         }
     }
+
+}
+
+char * token_trim(char * token, int start, int end){
+    if(end >= start){
+        char * result = malloc(sizeof(char) * (end - start + 1));
+
+        for (int i = start; i <= end; i++){
+            result[i-start] = token[i];
+        }
+
+        return result;
+    }else{
+        return NULL;
+    }
+    
 }
