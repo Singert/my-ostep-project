@@ -9,6 +9,7 @@
 
 extern char * error_message;
 extern char * env[500];
+extern int env_count;
 
 void shell_start(char * batchfile);
 
@@ -16,7 +17,7 @@ int count_tokens(char * tokens, int char_count);
 
 int read_line(char ** buffer, FILE * stream);
 
-char ** tokenize(FILE * stream, int input_type);
+void tokenize(FILE * stream, int input_type);
 
 void token_extract(char * source, char ** destination, char * delim);
 
@@ -35,3 +36,5 @@ int redirect_start(char * filename);
 void redirect_end(int original_stdout, int original_stderr);
 
 char * token_trim(char * token, int start, int end);
+
+void free_token_array(char ** token_array, int length);

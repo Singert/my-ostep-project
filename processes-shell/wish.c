@@ -3,6 +3,7 @@
 char * error_message = "An error has occurred\n";
 
 char * env[500];
+int env_count = 1;
 
 int main(int argc, char * argv[]){
 

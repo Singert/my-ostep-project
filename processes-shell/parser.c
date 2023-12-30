@@ -17,15 +17,14 @@ void shell_start(char * batchfile){
     }
 
     while(1){
-        char ** arg_tokens = tokenize(fp, w);
-        arg_tokens = arg_tokens;    // To avoid warnings about unused variables
+        tokenize(fp, w);
     }
 
 }
 
 
 
-char ** tokenize(FILE * stream, int input_type){
+void tokenize(FILE * stream, int input_type){
 
     char * cmd_tokens = NULL;
     int char_count = 0;
@@ -43,13 +42,17 @@ char ** tokenize(FILE * stream, int input_type){
         token_extract(cmd_tokens, arg_tokens, " \n");
 
         command_select(arg_tokens, token_count);
+
+        free_token_array(arg_tokens, token_count+1);
     }
+
+    free(cmd_tokens);
+    
 
     if(input_type){
         printf("wish> ");
     }
 
-    return arg_tokens;
 }
 
 void command_select(char ** commands, int token_count){
@@ -72,6 +75,7 @@ void command_select(char ** commands, int token_count){
         int checkpoints[100] = {0};
         int checkpoints_count = tokenize_commands(commands, token_count, checkpoints);
         exec_cmd(commands, checkpoints, checkpoints_count);
+        
     }
 }
 
@@ -173,6 +177,7 @@ int tokenize_commands(char ** commands, int token_count, int * checkpoints){
 
 void path_init(char ** commands, int token_count){
     int j = 0;
+    env_count = 0;
     while(j < token_count){
         env[j] = NULL;
         j++;
@@ -181,10 +186,11 @@ void path_init(char ** commands, int token_count){
 
     int i = 1;
     while(i < token_count){
-
-        env[i-1] = commands[i];
+        env[i-1] = strdup(commands[i]);
         i++;
+        env_count++;
     }
+
 }
 
 
@@ -205,21 +211,27 @@ void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
         char * path;
         if((path = is_file_exist(commands[checkpoints[j]])) == NULL){
             fprintf(stderr, "%s", error_message);
+            free(path);
+            free(pid);
             return;
         }
 
         int command_size = checkpoints[j+1] - checkpoints[j];
         char ** single_command = (char **) malloc(sizeof(char *) * (command_size + 2));
 
-
-        for (size_t i = checkpoints[j]; i <= checkpoints[j+1]; i++)
+        size_t i;
+        for (i = checkpoints[j]; i <= checkpoints[j+1]; i++)
         {
             single_command[i-checkpoints[j]] = commands[i];
         }
+        single_command[i-checkpoints[j]] = '\0';
         
         int redirect_count = 0;
 
         if((redirect_count = redirect_check(single_command, command_size)) == -1){
+            free(path);
+            free(single_command);
+            free(pid);
             return;
 
         }else if(redirect_count == 1){
@@ -229,6 +241,9 @@ void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
 
             if(redirect_start(commands[checkpoints[j+1]]) == -1){
                 fprintf(stderr, "%s", error_message);
+                free(path);
+                free(single_command);
+                free(pid);
                 return;
             }
             single_command[command_size] = NULL;
@@ -253,13 +268,16 @@ void exec_cmd(char ** commands, int * checkpoints, int checkpoints_count){
         }
 
         j+=2;
+        free(single_command);
+        free(path);
     }
 
     for (size_t i = 0; i < checkpoints_count/2; i++)
     {
         waitpid(pid[i], NULL, 0);
     }
-    
+
+    free(pid);
     
 }
 
@@ -329,7 +347,7 @@ void token_extract(char * source, char ** destination, char * delim){
                         i++;
                     }
 
-                    destination[i] = (temp[j] == '>' ? ">" : "&");
+                    destination[i] = strdup((temp[j] == '>' ? ">" : "&"));
                     i++;
 
                     last = j+1;
@@ -343,20 +361,29 @@ void token_extract(char * source, char ** destination, char * delim){
             }
         }
     }
+    destination[i] = '\0';
 
 }
 
 char * token_trim(char * token, int start, int end){
     if(end >= start){
-        char * result = malloc(sizeof(char) * (end - start + 1));
+        char * result = malloc(sizeof(char) * (end - start + 2));
 
         for (int i = start; i <= end; i++){
             result[i-start] = token[i];
         }
+        result[end-start+1] = '\0';
 
         return result;
     }else{
         return NULL;
     }
     
+}
+
+void free_token_array(char ** token_array, int length){
+    for (size_t i = 0; i < length; i++){
+        free(token_array[i]);
+    }
+    free(token_array);
 }
