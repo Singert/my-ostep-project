@@ -297,10 +297,12 @@ int count_tokens(char * tokens, int char_count){
     char last_char = 0;
     for (size_t i = 0; i < char_count; i++)
     {
-        if((tokens[i] == ' ' && (last_char != 0 && last_char != ' ')) || (tokens[i] == '\n' && (last_char != 0 && last_char != ' '))){
+        if((tokens[i] == ' ' || tokens[i] == '\n') && (last_char != 0 && last_char != ' ')){
             token_count++;
-        }else if(tokens[i] == '>' && i != 0 && i != char_count -1 && tokens[i-1] != ' ' && tokens[i+1] != ' '){
+        }else if((tokens[i] == '>' || tokens[i] == '&') && i != 0 && i != char_count -2 && tokens[i-1] != ' ' && tokens[i+1] != ' '){
             token_count+=2;
+        }else if((tokens[i] == '>' || tokens[i] == '&') && ((last_char == ' ' && tokens[i+1] != ' ' && i != char_count -2) || (last_char != ' ')) && i != 0){
+            token_count++;
         }
         last_char = tokens[i];
     }
@@ -319,14 +321,15 @@ void token_extract(char * source, char ** destination, char * delim){
             int j;
             int last = 0;
             for (j = 0; temp[j] != '\0' ; j++){
-                if(temp[j] == '>'){
+                
+                if(temp[j] == '>' || temp[j] == '&'){
                     
                     if((trim_res = token_trim(temp, last, j-1)) != NULL){
                         destination[i] = trim_res;
                         i++;
                     }
 
-                    destination[i] = ">";
+                    destination[i] = (temp[j] == '>' ? ">" : "&");
                     i++;
 
                     last = j+1;
