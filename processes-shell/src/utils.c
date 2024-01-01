@@ -11,7 +11,7 @@ void initialize_path(void){
 }
 
 void update_path(char ** commands, int token_count){
-
+    // Each invokation of this function the environment variable gets erased and overwritten.
     memset(env, 0, sizeof(env));
 
     int i = 1;
