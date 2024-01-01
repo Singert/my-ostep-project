@@ -1,15 +1,24 @@
-CC = gcc
-CFLAGS = -Wall -Werror -g
+CC := gcc
+CFLAGS := -Wall -Werror -g
 
-all: wish
+SRCDIR := src
+OBJDIR := obj
 
-wish: wish.o parser.o
+SRC := $(wildcard $(SRCDIR)/*.c)
+OBJ := $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+
+.PHONY: clean all
+
+all: $(OBJDIR) wish
+
+wish: $(OBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 
-%.o:%.c
-	$(CC) -c $^ -o $@ $(CFLAGS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
 
-.PHONY: clean
+$(OBJDIR):
+	mkdir -p $@
 
 clean:
-	rm -f wish.o parser.o wish
+	rm -rf wish $(OBJDIR)
