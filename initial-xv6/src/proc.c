@@ -20,6 +20,8 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+int counter = 0;
+
 void
 pinit(void)
 {
@@ -533,14 +535,6 @@ procdump(void)
   }
 }
 
-int counter = -1;
-
-int getreadcount(void)
-{ 
-  if (counter <= 0){
-    return counter;}
-  else return counter ;
-
-
+int getreadcount(void){
+  return counter;
 }
-

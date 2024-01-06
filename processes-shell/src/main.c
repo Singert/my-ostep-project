@@ -1,5 +1,9 @@
 #include "../include/shell.h"
 
+// ANSI escape codes for color formatting
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 char * env[500];
 
 int main(int argc, char * argv[]){
@@ -13,7 +17,7 @@ int main(int argc, char * argv[]){
     while (1)
     {   
         if(input_file == stdin){
-            printf("wish> ");
+            printf(ANSI_COLOR_GREEN "wish> " ANSI_COLOR_RESET);
         }
         shell_start(input_file);
     }

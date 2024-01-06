@@ -4,23 +4,23 @@
 
 void outsd (char* line[] , int linecount){
     for ( int i = linecount-1 ; i >= 0 ; i--)
-            {
-                printf("%s", line[i]);
-                // Free the allocated memory for the line buffer
-                free(line[i]);
-            }
+    {
+        printf("%s", line[i]);
+        // Free the allocated memory for the line buffer
+        free(line[i]);
+    }
 }
 
 char* strfile(char **string)
-    {
-        char delim[20] = "/"; 
-        char* o_Ptr;
-        char* out_ptr;  
-        while ((o_Ptr = strsep(string, delim)) != NULL){
-            out_ptr = o_Ptr ;
-        }
-        return out_ptr;
+{
+    char delim[20] = "/"; 
+    char* o_Ptr;
+    char* out_ptr;  
+    while ((o_Ptr = strsep(string, delim)) != NULL){ 
+        out_ptr = o_Ptr ;
     }
+    return out_ptr;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         char *line[5] = {NULL};
         // Read the file line by line and print each line
         lineCount = 0;
-        while ((read = getline(&line[lineCount], &len, stdin)) != -1) {
+        while ((read = getline(&line[lineCount], &len, stdin)) != EOF) {
             lineCount++;
         }
         outsd(line , lineCount);

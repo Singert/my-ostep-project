@@ -122,7 +122,6 @@ void            wakeup(void*);
 void            yield(void);
 int             getreadcount(void);
 
-
 // swtch.S
 void            swtch(struct context**, struct context*);
 
