@@ -6,7 +6,7 @@
 #include "proc.h"
 #include "x86.h"
 #include "syscall.h"
-#include <pthread.h>
+#include "spinlock.h"
 
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
@@ -133,7 +133,7 @@ static int (*syscalls[])(void) = {
 [SYS_getreadcount]  sys_getreadcount
 };
 
-// static pthread_mutex_t the_mutex = PTHREAD_MUTEX_INITIALIZER;
+struct spinlock lock;
 void
 syscall(void)
 {
@@ -144,10 +144,9 @@ syscall(void)
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     curproc->tf->eax = syscalls[num]();
     if(num==5){
-      // pthread_mutex_lock(&the_mutex);
+      acquire(&lock);
       counter++;
-      // pthread_mutex_unlock(&the_mutex);
-      
+      release(&lock);
     }
       
   } else {
