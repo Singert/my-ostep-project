@@ -38,7 +38,7 @@ responds with the requested content and closes the connection. The browser
 reads the content and displays it on the screen.
 
 HTTP is built on top of the **TCP/IP** protocol suite provided by the
-operating system. Together, TPC and IP ensure that messages are routed to
+operating system. Together, TCP and IP ensure that messages are routed to
 their correct destination, get from source to destination reliably in the face
 of failure, and do not overly congest the network by sending too many messages
 at once, among other features. To learn more about networks, take a networking
@@ -251,7 +251,7 @@ first request (i.e., the oldest request) in the buffer. Note that the HTTP
 requests will not necessarily finish in FIFO order; the order in which the
 requests complete will depend upon how the OS schedules the active threads.
 
-- ** Smallest File First (SFF)**: When a worker thread wakes, it handles the
+- **Smallest File First (SFF)**: When a worker thread wakes, it handles the
 request for the smallest file. This policy approximates Shortest Job First to
 the extent that the size of the file is a good prediction of how long it takes
 to service that request. Requests for static and dynamic content may be
