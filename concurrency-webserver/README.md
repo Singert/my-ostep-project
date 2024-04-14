@@ -38,7 +38,7 @@ responds with the requested content and closes the connection. The browser
 reads the content and displays it on the screen.
 
 HTTP is built on top of the **TCP/IP** protocol suite provided by the
-operating system. Together, TPC and IP ensure that messages are routed to
+operating system. Together, TCP and IP ensure that messages are routed to
 their correct destination, get from source to destination reliably in the face
 of failure, and do not overly congest the network by sending too many messages
 at once, among other features. To learn more about networks, take a networking
@@ -251,7 +251,7 @@ first request (i.e., the oldest request) in the buffer. Note that the HTTP
 requests will not necessarily finish in FIFO order; the order in which the
 requests complete will depend upon how the OS schedules the active threads.
 
-- ** Smallest File First (SFF)**: When a worker thread wakes, it handles the
+- **Smallest File First (SFF)**: When a worker thread wakes, it handles the
 request for the smallest file. This policy approximates Shortest Job First to
 the extent that the size of the file is a good prediction of how long it takes
 to service that request. Requests for static and dynamic content may be
@@ -329,13 +329,13 @@ the following files:
   existing call to provide a version that either succeeds or exits. For
   example, the `open()` system call is used to open a file, but can fail for a
   number of reasons. The wrapper, `open_or_die()`, either successfully opens a
-  file or exists upon failure. 
+  file or exits upon failure. 
 - [`wclient.c`](https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/concurrency-webserver/src/wclient.c): Contains main() and the support routines for the very simple
   web client. To test your server, you may want to change this code so that it
   can send simultaneous requests to your server. By launching `wclient`
   multiple times, you can test how your server handles concurrent requests.
 - [`spin.c`](https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/concurrency-webserver/src/spin.c): A simple CGI program. Basically, it spins for a fixed amount
-  of time, which you may useful in testing various aspects of your server.  
+  of time, which you may find useful in testing various aspects of your server.  
 - [`Makefile`](https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/concurrency-webserver/src/Makefile): We also provide you with a sample Makefile that creates
   `wserver`, `wclient`, and `spin.cgi`. You can type make to create all of 
   these programs. You can type make clean to remove the object files and the
