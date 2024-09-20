@@ -90,6 +90,22 @@ int del_node(int k,llist* list)
     return 0;
 }
 
+void clear_list(llist* list)
+{
+    list->head = NULL;
+}
+
+void print_list(llist* list)
+{
+    l_node* curr = list->head;
+    while(curr != NULL)
+    {
+        printf("key: %d, value: %s\n",curr->key,curr->value);
+        curr = curr->next;
+    }
+    printf("that's all\n");
+}
+
 
 //parse command,
 //return an array of str which stores parsed commands;    
@@ -188,8 +204,17 @@ int main(int argc, char* argv[])
                     }
                 }
             }
-            //parse "clear" "all" need to be completed;
-            // else if()
+            // parse "all"
+            else if(strcmp(cmd[0],"a")==0)
+            {
+                printf("test A\n");
+                print_list(list);
+            }
+            else if(strcmp(cmd[0], "c")==0)
+            {
+                printf("test C\n");
+                clear_list(list);
+            }
         }
     i++;
     }
