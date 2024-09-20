@@ -1,3 +1,7 @@
+//The code  implements basically complete functionalities that 
+// parses instructions input 
+//and maintains a linked list while performs basic opreations.
+// write linked list into file and load it to linklist successfully
 # include <stdio.h>
 # include <string.h>
 #include <time.h>
