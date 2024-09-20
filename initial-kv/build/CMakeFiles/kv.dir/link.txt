@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/kv.dir/kv/kv.o -o kv 

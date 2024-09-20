@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/singer/learn/my-ostep-project/initial-kv/build",
+  "command": "/usr/bin/cc    -o CMakeFiles/kv.dir/kv/kv.o -c /home/singer/learn/my-ostep-project/initial-kv/kv/kv.c",
+  "file": "/home/singer/learn/my-ostep-project/initial-kv/kv/kv.c"
+}
+]
