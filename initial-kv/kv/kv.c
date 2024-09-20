@@ -1,3 +1,7 @@
+//The code only implements few functionalities that 
+// parses instructions input 
+//and maintains a linked list while performs basic opreations.
+
 # include <stdio.h>
 # include <string.h>
 # include <unistd.h>

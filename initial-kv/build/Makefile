@@ -129,6 +129,19 @@ kv/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv.dir/build.make CMakeFiles/kv.dir/build
 .PHONY : kv/fast
 
+#=============================================================================
+# Target rules for targets named kv1
+
+# Build rule for target.
+kv1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 kv1
+.PHONY : kv1
+
+# fast build rule for target.
+kv1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/build
+.PHONY : kv1/fast
+
 # target to build an object file
 kv/kv.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv.dir/build.make CMakeFiles/kv.dir/kv/kv.o
@@ -144,6 +157,21 @@ kv/kv.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv.dir/build.make CMakeFiles/kv.dir/kv/kv.s
 .PHONY : kv/kv.s
 
+# target to build an object file
+kv/kv1.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/kv/kv1.o
+.PHONY : kv/kv1.o
+
+# target to preprocess a source file
+kv/kv1.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/kv/kv1.i
+.PHONY : kv/kv1.i
+
+# target to generate assembly for a file
+kv/kv1.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/kv/kv1.s
+.PHONY : kv/kv1.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -153,9 +181,13 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... kv"
+	@echo "... kv1"
 	@echo "... kv/kv.o"
 	@echo "... kv/kv.i"
 	@echo "... kv/kv.s"
+	@echo "... kv/kv1.o"
+	@echo "... kv/kv1.i"
+	@echo "... kv/kv1.s"
 .PHONY : help
 
 

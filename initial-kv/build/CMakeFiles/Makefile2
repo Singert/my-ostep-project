@@ -64,6 +64,7 @@ CMAKE_BINARY_DIR = /home/singer/learn/my-ostep-project/initial-kv/build
 
 # The main recursive "all" target.
 all: CMakeFiles/kv.dir/all
+all: CMakeFiles/kv1.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -72,6 +73,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/kv.dir/clean
+clean: CMakeFiles/kv1.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -99,6 +101,32 @@ kv: CMakeFiles/kv.dir/rule
 CMakeFiles/kv.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv.dir/build.make CMakeFiles/kv.dir/clean
 .PHONY : CMakeFiles/kv.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/kv1.dir
+
+# All Build rule for target.
+CMakeFiles/kv1.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles --progress-num=3,4 "Built target kv1"
+.PHONY : CMakeFiles/kv1.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/kv1.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/kv1.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles 0
+.PHONY : CMakeFiles/kv1.dir/rule
+
+# Convenience name for target.
+kv1: CMakeFiles/kv1.dir/rule
+.PHONY : kv1
+
+# clean rule for target.
+CMakeFiles/kv1.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kv1.dir/build.make CMakeFiles/kv1.dir/clean
+.PHONY : CMakeFiles/kv1.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

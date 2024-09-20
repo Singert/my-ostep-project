@@ -1,3 +1,4 @@
 /home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles/kv.dir
+/home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles/kv1.dir
 /home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles/edit_cache.dir
 /home/singer/learn/my-ostep-project/initial-kv/build/CMakeFiles/rebuild_cache.dir
