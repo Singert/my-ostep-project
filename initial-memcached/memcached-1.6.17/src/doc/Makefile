@@ -151,12 +151,12 @@ MANS = $(man_MANS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} '/home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/dormando/d/p/danga/git/memcached/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} '/home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/missing' automake-1.16
+AUTOCONF = ${SHELL} '/home/dormando/d/p/danga/git/memcached/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/dormando/d/p/danga/git/memcached/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/dormando/d/p/danga/git/memcached/missing' automake-1.16
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -187,7 +187,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -levent 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} '/home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/missing' makeinfo
+MAKEINFO = ${SHELL} '/home/dormando/d/p/danga/git/memcached/missing' makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 OPENSSL_CFLAGS = 
@@ -200,7 +200,7 @@ PACKAGE_TARNAME = memcached
 PACKAGE_URL = 
 PACKAGE_VERSION = 1.6.17
 PATH_SEPARATOR = :
-PKG_CONFIG = 
+PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
 PKG_CONFIG_PATH = 
 PROFILER = /usr/bin/gcov
@@ -210,12 +210,12 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.6.17
-XML2RFC = no
-XSLTPROC = no
-abs_builddir = /home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/doc
-abs_srcdir = /home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/doc
-abs_top_builddir = /home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17
-abs_top_srcdir = /home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17
+XML2RFC = /usr/bin/xml2rfc
+XSLTPROC = /usr/bin/xsltproc
+abs_builddir = /home/dormando/d/p/danga/git/memcached/doc
+abs_srcdir = /home/dormando/d/p/danga/git/memcached/doc
+abs_top_builddir = /home/dormando/d/p/danga/git/memcached
+abs_top_srcdir = /home/dormando/d/p/danga/git/memcached
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -242,7 +242,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/singer/learn/my-ostep-project/initial-memcached/memcached-1.6.17/install-sh
+install_sh = ${SHELL} /home/dormando/d/p/danga/git/memcached/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -521,10 +521,10 @@ uninstall-man: uninstall-man1
 #RFC2629_DTD = $(srcdir)/xml2rfc/rfc2629.dtd
 
 #%.txt: %.full $(RFC2629_DTD)
-#	no -d $(RFC2629_DTD) -c $(builddir) $< $@
+#	/usr/bin/xml2rfc -d $(RFC2629_DTD) -c $(builddir) $< $@
 #
 #%.full: %.xml $(RFC2629_XSL)
-#	no --nonet $(RFC2629_XSL) $< > $@
+#	/usr/bin/xsltproc --nonet $(RFC2629_XSL) $< > $@
 
 # Prevent make from deleting intermediate files
 #all-full: $(SPECIFICATIONS:.txt=.full)
