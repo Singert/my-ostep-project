@@ -1,3 +1,4 @@
+// FIXME  test command "./wgrep test 1.md 2.md"
 # include <stdio.h>
 # include <stdlib.h>
 #include <string.h>
@@ -38,7 +39,12 @@ void print_list(llist*list)
 {
     lnode* curr = (lnode*)malloc(sizeof(lnode));
     curr = list->head;
-    
+    while (curr != NULL)
+    {
+        printf("%s",curr->value);
+        curr= curr->next;
+    }
+
 }
 
 //parse_command
@@ -52,8 +58,8 @@ void parse_command(int arg,char* args[],char* results[])
     else 
     {
         for(int i = 1; i < arg; i++)
-        {
-            strcpy(results[i-1],args[i]);
+        {   
+            results[i-1] = strdup(args[i]);
         }
     }
 }
@@ -62,8 +68,7 @@ int main(int argc, char*argv[])
 {
     llist* src = create_list();
     llist*dest = create_list();
-    // czx,lpt.ltq,xww,fz,hcy,lmz,cys,scd,ryn,xlx,mjy,yzy（未回复），zjc，14个，tml，wbc（叫了没？）
-//有没叫道的吗，老赵估计睡觉了
+
     char* cmd[COUNT];
     parse_command(argc, argv, cmd);
     int i = 1;
@@ -81,14 +86,16 @@ int main(int argc, char*argv[])
             char *line = NULL;
             size_t len = 0;
             ssize_t read;
-            while ((read = getline(&line, &len, fp)!= -1))
+            while ((read = getline(&line, &len, fp))!= -1)
             {
                 add_node(line, src);
             }
         }
-
+        i = i + 1;
     }
-
+    printf("B\n");
+    print_list(src);
+    printf("A\n");
     lnode *curr = src->head;
     while (curr!= NULL)
     {
